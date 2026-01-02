@@ -1,63 +1,48 @@
+#include "trie.h"
 #include <iostream>
-#include <unordered_map>
-#include <string>
 
-using namespace std;
+TrieNode::TrieNode() {
+    isEnd = false;
+}
 
-class TrieNode {
-public:
-    unordered_map<char, TrieNode*> children;
-    bool isEnd;
+Trie::Trie() {
+    root = new TrieNode();
+}
 
-    TrieNode() {
-        isEnd = false;
+int Trie::countNodesHelper(TrieNode* node) {
+    if (!node) return 0;
+
+    int count = 1;
+    for (auto &child : node->children) {
+        count += countNodesHelper(child.second);
     }
-};
+    return count;
+}
 
-class Trie {
-private:
-    TrieNode* root;
+void Trie::insert(const std::string &word) {
+    TrieNode* current = root;
 
-    int countNodesHelper(TrieNode* node) {
-        if (!node) return 0;
-
-        int count = 1;
-        for (auto &child : node->children) {
-            count += countNodesHelper(child.second);
+    for (char ch : word) {
+        if (current->children.find(ch) == current->children.end()) {
+            current->children[ch] = new TrieNode();
         }
-        return count;
+        current = current->children[ch];
     }
+    current->isEnd = true;
+}
 
-public:
-    Trie() {
-        root = new TrieNode();
-    }
+bool Trie::search(const std::string &word) {
+    TrieNode* current = root;
 
-    void insert(const string &word) {
-        TrieNode* current = root;
-
-        for (char ch : word) {
-            if (current->children.find(ch) == current->children.end()) {
-                current->children[ch] = new TrieNode();
-            }
-            current = current->children[ch];
+    for (char ch : word) {
+        if (current->children.find(ch) == current->children.end()) {
+            return false;
         }
-        current->isEnd = true;
+        current = current->children[ch];
     }
+    return current->isEnd;
+}
 
-    bool search(const string &word) {
-        TrieNode* current = root;
-
-        for (char ch : word) {
-            if (current->children.find(ch) == current->children.end()) {
-                return false;
-            }
-            current = current->children[ch];
-        }
-        return current->isEnd;
-    }
-
-    int countNodes() {
-        return countNodesHelper(root);
-    }
-};
+int Trie::countNodes() {
+    return countNodesHelper(root);
+}
