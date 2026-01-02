@@ -1,3 +1,4 @@
+#include "trie.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -5,6 +6,7 @@
 using namespace std;
 int main() {
     Trie trie;
+
     vector<string> words = {
         "राम",
         "रामायण",
@@ -19,6 +21,7 @@ int main() {
     for (const auto &word : words) {
         trie.insert(word);
     }
+
     cout << trie.search("राम") << endl;
     cout << trie.search("राज") << endl;
     cout << trie.search("राजकुमार") << endl;
