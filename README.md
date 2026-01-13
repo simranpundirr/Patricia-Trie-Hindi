@@ -1,98 +1,101 @@
 # Space-efficient Dictionary Storage using Patricia Trie for Hindi Language
 
+## Overview
+This project compares a **Standard Trie** and a **Patricia (Compressed) Trie**
+for storing Hindi (Devanagari) words.  
+The goal is to experimentally show that **Patricia Trie uses significantly less
+memory while maintaining efficient search performance**.
+
+---
+
 ## Problem Statement
-Standard tries consume large memory when storing large dictionaries of regional
+Standard tries consume large memory when storing dictionaries of regional
 languages due to long words and many common prefixes.  
-This project studies and demonstrates how a **Patricia (compressed) trie**
-reduces memory usage while preserving search efficiency.
+This project demonstrates how a **Patricia Trie compresses such paths** and
+reduces memory usage without affecting search correctness.
 
 ---
 
-## Scope
-- **Language:** Hindi (Devanagari)
-- **Structures Compared:** Standard Trie vs Patricia Trie
-- **Metrics:** Node count, memory usage trend
-- **Focus:** Space efficiency
+## Dataset
+A small Hindi dictionary was created to validate trie behavior and compression.
+
+Location: data/hindi_words.txt
+
+The dataset contains words with:
+- Common prefixes
+- Prefix-as-word cases
+- Branching points  
+
+This allows Patricia Trie compression to be clearly observed.
 
 ---
 
-## Objectives
-- To study the limitations of standard trie structures in storing large regional
-  language dictionaries.
-- To design and implement a Patricia trie for the same dataset.
-- To compare space usage between standard trie and Patricia trie.
-- To experimentally demonstrate that the Patricia trie is more space-efficient
-  while maintaining search performance.
+## Project Structure
 
----
-
-## Assumptions
-- Words are pre-cleaned and valid.
-- Case sensitivity is not applicable.
-- Characters are treated as logical symbols, not raw bytes.
-
----
-
-## Constraints
-- Memory efficiency is prioritized over constant-time optimizations.
-- Only prefix-based operations are considered.
-- One regional language is used for the experiment.
-
----
-
-## Evaluation Metrics
-- Number of nodes created
-- Average branching factor
-- Total stored characters
-- Memory usage trend (approximate)
-- Correctness of search results
+src/
+├── trie.h
+├── trie.cpp
+├── patricia_trie.h
+├── patricia_trie.cpp
+└── main.cpp
+data/
+└── hindi_words.txt
 
 ---
 
 ## Methodology
-1. Collect a dictionary of Hindi words.
-2. Construct a standard trie using the dataset.
-3. Measure space-related metrics.
-4. Construct a Patricia trie using the same dataset.
-5. Measure the same metrics.
-6. Compare results and analyze space efficiency.
+
+1. Read Hindi words from `hindi_words.txt`
+2. Insert all words into:
+   - Standard Trie
+   - Patricia Trie
+3. Count number of nodes used by each structure
+4. Compare space usage trends
+
+This experiment is implemented in `src/main.cpp`.
 
 ---
 
-## Expected Outcomes
-- Patricia trie will use significantly fewer nodes than a standard trie.
-- Memory consumption will reduce due to path compression.
-- Search time complexity will remain **O(L)** for both structures.
+## How to Run
+
+From the `src` folder:
+g++ main.cpp trie.cpp patricia_trie.cpp -o compare
+./compare
 
 ---
 
-## Limitations
-- Memory usage is estimated, not measured at byte level.
-- Unicode handling is simplified.
-- Results may vary with different languages or datasets.
+## Output (Sample)
+Total words inserted: 20
+Standard Trie Nodes: 132
+Patricia Trie Nodes: 48
+
+*(Exact values depend on dataset)*
+
+---
+
+## Why Patricia Trie is Better
+
+In a standard trie, every character creates a new node.  
+In a Patricia Trie, long chains of single-child nodes are **compressed into a single edge**, greatly reducing memory usage.
+
+This is especially beneficial for **regional languages like Hindi**, where words are long and share prefixes.
+
+---
+
+## Time Complexity
+
+| Operation | Trie | Patricia Trie |
+|---------|------|---------------|
+| Insert  | O(L) | O(L) |
+| Search  | O(L) | O(L) |
+| Space   | High | Low (compressed) |
 
 ---
 
 ## Future Enhancements
-- Extend support to multiple regional languages.
-- Perform byte-level memory profiling.
-- Add prefix-based search features.
-- Compare with other compressed trie variants.
+- Larger Hindi dictionary
+- Byte-level memory profiling
+- Prefix search and auto-complete
+- Support for multiple languages
 
----
-
-## Micro Dataset (Validation Set)
-A small dictionary of Hindi words was created to validate trie and Patricia trie
-structures. The dataset was designed to include common prefixes, branching points,
-and prefix-as-word cases to clearly demonstrate path compression.
-
-**Chosen Set of Words (Hindi – Devanagari):**
-- राम
-- रामायण
-- रामकथा
-- राज
-- राजा
-- राज्य
-- रानी
-- राष्ट्र
 
