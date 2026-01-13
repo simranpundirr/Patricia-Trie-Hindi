@@ -1,33 +1,32 @@
-#include "trie.h"
-#include <iostream>
-#include <vector>
-#include <string>
-
+#include <bits/stdc++.h>
 using namespace std;
+
+#include "trie.h"
+#include "patricia_trie.h"
+
 int main() {
     Trie trie;
+    PatriciaTrie patricia;
 
-    vector<string> words = {
-        "राम",
-        "रामायण",
-        "रामकथा",
-        "राज",
-        "राजा",
-        "राज्य",
-        "रानी",
-        "राष्ट्र"
-    };
+    ifstream file("../data/hindi_words.txt");
 
-    for (const auto &word : words) {
-        trie.insert(word);
+    if (!file.is_open()) {
+        cout << "Failed to open hindi_words.txt" << endl;
+        return 0;
     }
 
-    cout << trie.search("राम") << endl;
-    cout << trie.search("राज") << endl;
-    cout << trie.search("राजकुमार") << endl;
+    string word;
+    int count = 0;
 
-    cout << "Standard Trie Node Count: "
-         << trie.countNodes() << endl;
+    while (file >> word) {
+        trie.insert(word);
+        patricia.insert(word);
+        count++;
+    }
+
+    cout << "Total words inserted: " << count << endl;
+    cout << "Standard Trie Nodes: " << trie.countNodes() << endl;
+    cout << "Patricia Trie Nodes: " << patricia.countNodes() << endl;
 
     return 0;
 }
